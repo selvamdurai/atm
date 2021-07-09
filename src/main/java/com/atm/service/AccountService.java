@@ -38,7 +38,7 @@ public class AccountService {
 
     public AccountBalance getBalance(String accountNumber){
         BigDecimal balance = this.accountRepository.getAccounts().get(accountNumber).getBalance().setScale(2);
-        AccountBalance ab = new AccountBalance(accountNumber,balance.toString());
+        AccountBalance ab = new AccountBalance(accountNumber,balance.longValue());
         return ab;
     }
 
@@ -116,5 +116,17 @@ public class AccountService {
         WithdrawResponse response = new WithdrawResponse(notes, account);
         response.setMessage(message);
         return response;
+    }
+
+    public DepositResponse deposit(AccountBalance accountBalance) {
+        BankAccount account = this.accountRepository.getAccounts().get(accountBalance.getAccountNumber());
+        String message;
+        if(null != account){
+            account.deposit(new BigDecimal(accountBalance.getBalance()));
+            message = "SUCCESS";
+        }else{
+            message = "Invalid Account number provided.";
+        }
+        return new DepositResponse(message);
     }
 }

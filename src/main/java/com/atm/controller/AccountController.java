@@ -1,11 +1,12 @@
 package com.atm.controller;
 
 import com.atm.model.AccountBalance;
+import com.atm.model.DepositResponse;
 import com.atm.model.WithdrawRequest;
 import com.atm.model.WithdrawResponse;
 import com.atm.service.AccountService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,4 +32,11 @@ public class AccountController {
                 new BigDecimal(request.getAmount()));
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @PutMapping("/deposit")
+    public ResponseEntity<DepositResponse> deposit(@RequestBody AccountBalance accountBalance){
+        DepositResponse response = accountService.deposit(accountBalance);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
 }

@@ -19,11 +19,12 @@ public class ATMService {
     }
 
     public AtmCashRegister getAtmCashStatus() {
-
         return atmRepository.getCashRegister();
     }
 
-    public void addNotes(Map<Currency, Integer> notes) {
-
+    public String loadCash(Map<Currency, Integer> notes) {
+        String message = "SUCCESS";
+        atmRepository.getCashRegister().addNotes(notes);
+        return message;
     }
 }

@@ -1,10 +1,12 @@
 package com.atm.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Currency{
     @JsonProperty("Fifties")
     FIFTIES(1,50),
@@ -29,7 +31,11 @@ public enum Currency{
                 .filter(c -> c.getId() == val).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Unsupported Currency: " + val));
     }
+
+
     public int getAmount(){return this.amount;}
+
+
     public int getId(){return this.id;}
 
 }

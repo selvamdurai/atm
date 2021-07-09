@@ -2,9 +2,9 @@ package com.atm.model;
 
 public class AccountBalance {
     private String accountNumber;
-    private String balance;
+    private long balance;
 
-    public AccountBalance(String accountNumber, String balance) {
+    public AccountBalance(String accountNumber, long balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
     }
@@ -17,11 +17,11 @@ public class AccountBalance {
         this.accountNumber = accountNumber;
     }
 
-    public String getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(long balance) {
         this.balance = balance;
     }
 }

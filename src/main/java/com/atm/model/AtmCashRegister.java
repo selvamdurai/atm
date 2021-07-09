@@ -16,6 +16,9 @@ public class AtmCashRegister {
         return cashRegister;
     }
 
+    public AtmCashRegister() {
+    }
+
     public AtmCashRegister(Map<Currency, Integer> cashRegister) {
         this.cashRegister = cashRegister;
     }
