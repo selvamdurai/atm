@@ -2,28 +2,28 @@ package com.atm.repo;
 
 
 import com.atm.model.BankAccount;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-
+@Component
 public class AccountRepository {
     private Map<String, BankAccount> accounts = new HashMap<>();
-
-
-    void updateAccountBalance(String accountNumber, double newBalance){
-
-    }
-    public double getBalance(String accountNumber){
-        return this.accounts.get(accountNumber).getBalance();
+    public Map<String, BankAccount> getAccounts() {
+        return accounts;
     }
 
-    public void updateBalance(String accountNumber, double balance){
-        this.accounts.get(accountNumber).setBalance(balance);
+    public void setAccounts(Map<String, BankAccount> accounts) {
+        this.accounts = accounts;
     }
 
     public void saveAll(Map accounts) {
         this.accounts=accounts;
+    }
+
+    public void save(BankAccount account) {
+        String accountNumber = account.getAccountNumber();
+        accounts.put(accountNumber,account);
     }
 }

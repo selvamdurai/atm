@@ -1,17 +1,31 @@
 package com.atm.model;
 
 
-public class BankAccount {
-    private String accountNumber;
-    private int pin;
-    private double balance;
-    private double overdraftLimit;
 
-    public BankAccount(String accountNumber, int pin, double balance, double overdraftLimit) {
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+
+public class BankAccount implements Serializable {
+    private String accountNumber;
+
+    private BigDecimal balance;
+    private BigDecimal overdraftLimit;
+
+    public BankAccount(String accountNumber, BigDecimal balance, BigDecimal overdraftLimit) {
         this.accountNumber = accountNumber;
-        this.pin = pin;
+
         this.balance = balance;
         this.overdraftLimit = overdraftLimit;
+    }
+
+    public void withdraw(BigDecimal amount){
+        if(balance.doubleValue() >= amount.doubleValue() ){
+            this.balance = this.balance.subtract(amount);
+        }
+    }
+    public void deposit(BigDecimal amount){
+        this.balance = this.balance.add(amount);
     }
 
     public String getAccountNumber() {
@@ -22,27 +36,19 @@ public class BankAccount {
         this.accountNumber = accountNumber;
     }
 
-    public int getPin() {
-        return pin;
-    }
-
-    public void setPin(int pin) {
-        this.pin = pin;
-    }
-
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
-    public double getOverdraftLimit() {
+    public BigDecimal getOverdraftLimit() {
         return overdraftLimit;
     }
 
-    public void setOverdraftLimit(double overdraftLimit) {
+    public void setOverdraftLimit(BigDecimal overdraftLimit) {
         this.overdraftLimit = overdraftLimit;
     }
 
