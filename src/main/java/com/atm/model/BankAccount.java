@@ -20,9 +20,7 @@ public class BankAccount implements Serializable {
     }
 
     public void withdraw(BigDecimal amount){
-        if(balance.doubleValue() >= amount.doubleValue() ){
-            this.balance = this.balance.subtract(amount);
-        }
+       this.balance = this.balance.subtract(amount);
     }
     public void deposit(BigDecimal amount){
         this.balance = this.balance.add(amount);

@@ -20,6 +20,10 @@ public class ATMValidator implements Validator {
 
     public boolean validate(){
         BigDecimal totalCashAvailable = this.atmCashRegister.getTotalCashAvailable();
+        if(totalCashAvailable.doubleValue() == 0){
+            this.errorMessage="Cash unavailable.!!";
+            return false;
+        }
         if(withdrawAmount.doubleValue() > totalCashAvailable.doubleValue()){
             this.errorMessage="Cash cannot be dispensed. Please enter different amount.";
             return false;
@@ -37,6 +41,7 @@ public class ATMValidator implements Validator {
             this.errorMessage = "Cannot dispense this amount. Please re-enter different amount.";
             return false;
         }
+
         return true;
     }
 

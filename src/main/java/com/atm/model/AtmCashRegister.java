@@ -12,6 +12,10 @@ import java.util.Map;
 public class AtmCashRegister {
     private volatile Map<Currency,Integer> cashRegister;
 
+    public Map<Currency, Integer> getCashRegister() {
+        return cashRegister;
+    }
+
     public AtmCashRegister(Map<Currency, Integer> cashRegister) {
         this.cashRegister = cashRegister;
     }
@@ -22,12 +26,19 @@ public class AtmCashRegister {
             double amount = withdrawAmount.doubleValue();
             for(int i=1; i<=4; i++){
                 Currency note = Currency.getCurrency(i);
-                int count = cashRegister.get(note);
-                int numberOfNotes = (int) amount / note.getAmount();
-                if(count > numberOfNotes){
-                    notesMap.put(note,numberOfNotes);
-                    cashRegister.put(note,count-numberOfNotes);
+                int numberofNotesAvailable = cashRegister.get(note);
+                if(numberofNotesAvailable == 0){
+                    continue;
+                }
+                int numberofNotesRequired = (int) amount / note.getAmount();
+                if(numberofNotesAvailable >= numberofNotesRequired){
+                    notesMap.put(note, numberofNotesRequired);
+                    cashRegister.put(note, numberofNotesAvailable - numberofNotesRequired);
                     amount = (int) amount % note.getAmount();
+                }else if(numberofNotesAvailable < numberofNotesRequired){
+                    notesMap.put(note, numberofNotesAvailable);
+                    cashRegister.put(note, 0);
+                    amount -= numberofNotesAvailable * note.getAmount();
                 }
                 if(amount == 0){
                     break;
@@ -43,10 +54,15 @@ public class AtmCashRegister {
         double amount = withdrawAmount.doubleValue();
         for(int i=1; i<=4; i++){
             Currency note = Currency.getCurrency(i);
-            int count = cashRegister.get(note);
-            int numberOfNotes = (int) amount / note.getAmount();
-            if(count > numberOfNotes){
+            int numberofNotesAvailable = cashRegister.get(note);
+            if(numberofNotesAvailable == 0){
+                continue;
+            }
+            int numberofNotesRequired = (int) amount / note.getAmount();
+            if(numberofNotesAvailable >= numberofNotesRequired){
                 amount = (int) amount % note.getAmount();
+            }else if(numberofNotesAvailable < numberofNotesRequired){
+                amount -= numberofNotesAvailable*note.getAmount();
             }
         }
         return !(amount > 0);

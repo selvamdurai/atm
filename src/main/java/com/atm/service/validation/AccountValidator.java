@@ -19,7 +19,7 @@ public class AccountValidator implements Validator {
     public boolean validate(){
         double balance = account.getBalance().doubleValue();
         double overDraftLimit = account.getOverdraftLimit().doubleValue();
-        if (balance - withdrawAmount.doubleValue() >= overDraftLimit){
+        if ((balance + overDraftLimit ) >= withdrawAmount.doubleValue() ){
             return true;
         }else{
             errorMessage="Withdrawal amount greater than available account balance. Please enter correct amount.";

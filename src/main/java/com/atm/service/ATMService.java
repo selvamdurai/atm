@@ -18,11 +18,9 @@ public class ATMService {
         this.atmRepository = atmRepository;
     }
 
-    public Map<Currency, Integer> withdrawCash(BigDecimal amount) throws ServiceException{
-        Map<Currency , Integer> notesMap;
-        AtmCashRegister cashRegister = atmRepository.getCashRegister();
-        notesMap = cashRegister.withdrawCash(amount);
-        return notesMap;
+    public AtmCashRegister getAtmCashStatus() {
+
+        return atmRepository.getCashRegister();
     }
 
     public void addNotes(Map<Currency, Integer> notes) {

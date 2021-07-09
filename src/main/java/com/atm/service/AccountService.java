@@ -1,9 +1,6 @@
 package com.atm.service;
 
-import com.atm.model.AtmCashRegister;
-import com.atm.model.BankAccount;
-import com.atm.model.Currency;
-import com.atm.model.WithdrawResponse;
+import com.atm.model.*;
 import com.atm.repo.AccountRepository;
 import com.atm.repo.AtmRepository;
 import com.atm.service.commands.AccountCommand;
@@ -32,15 +29,17 @@ public class AccountService {
     private Logger LOGGER = Logger.getLogger(AccountService.class.getName());
 
 
+
     @Autowired
     public AccountService(AccountRepository accountRepository, AtmRepository atmRepository) {
         this.accountRepository = accountRepository;
         this.atmRepository = atmRepository;
     }
 
-    public BigDecimal getBalance(String accountNumber){
-        //if(authorized())
-        return this.accountRepository.getAccounts().get(accountNumber).getBalance();
+    public AccountBalance getBalance(String accountNumber){
+        BigDecimal balance = this.accountRepository.getAccounts().get(accountNumber).getBalance().setScale(2);
+        AccountBalance ab = new AccountBalance(accountNumber,balance.toString());
+        return ab;
     }
 
     public String getErrorMessage(){
@@ -103,7 +102,7 @@ public class AccountService {
                             LOGGER.log(Level.SEVERE, "Exception occurred during rollback operation. Master reset advised.", e);
                         }
                     });
-                    message = "Error Occurred: " + ex.getMessage();
+                    message = ex.getMessage();
                 }
             }else{
                 message = "Invalid Account number provided.";
@@ -111,7 +110,7 @@ public class AccountService {
 
 
         }catch(Exception exp){
-            message = "Exception Occurred: "+ exp.getMessage();
+            message = exp.getMessage();
             LOGGER.log(Level.SEVERE, message, exp);
         }
         WithdrawResponse response = new WithdrawResponse(notes, account);

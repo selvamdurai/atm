@@ -1,9 +1,11 @@
 package com.atm.controller;
 
+import com.atm.model.AccountBalance;
 import com.atm.model.WithdrawRequest;
 import com.atm.model.WithdrawResponse;
 import com.atm.service.AccountService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,8 @@ public class AccountController {
     }
 
     @GetMapping(path="/balance/{account}")
-    public ResponseEntity<String> getBalance(@PathVariable("account") String accountNumber){
-        return new ResponseEntity<>(accountService.getBalance(accountNumber).toString(), HttpStatus.OK) ;
+    public ResponseEntity<AccountBalance> getBalance(@PathVariable("account") String accountNumber){
+        return new ResponseEntity<>(accountService.getBalance(accountNumber), HttpStatus.OK) ;
     }
 
     @PutMapping("/withdraw")
