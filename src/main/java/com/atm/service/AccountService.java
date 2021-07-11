@@ -40,7 +40,7 @@ public class AccountService {
         AccountBalance ab;
         if( null != this.accountRepository.getAccounts().get(accountNumber)){
             BigDecimal balance = this.accountRepository.getAccounts().get(accountNumber).getBalance().setScale(2);
-            ab = new AccountBalance(accountNumber,balance.longValue());
+            ab = new AccountBalance(accountNumber,balance.longValue(), "SUCCESS");
         }else{
             ab = new AccountBalance();
             ab.setMessage("Invalid Account number provided.");

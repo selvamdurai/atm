@@ -10,6 +10,8 @@ import com.atm.service.AccountService;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -28,6 +30,7 @@ public class AccountController {
 
     @GetMapping(path="/balance/{account}")
     public ResponseEntity<AccountBalance> getBalance(@PathVariable("account") String accountNumber){
+        authorize(accountNumber);
         try{
             return new ResponseEntity<>(accountService.getBalance(accountNumber),
                                 HttpStatus.OK) ;
@@ -39,6 +42,7 @@ public class AccountController {
 
     @PutMapping("/withdraw")
     public ResponseEntity<WithdrawResponse> withdraw(@RequestBody WithdrawRequest request){
+        authorize(request.getAccount());
         try{
             WithdrawResponse response = accountService.withDrawAmount(
                     request.getAccount(),
@@ -52,6 +56,7 @@ public class AccountController {
 
     @PutMapping("/deposit")
     public ResponseEntity<DepositResponse> deposit(@RequestBody AccountBalance accountBalance){
+        authorize(accountBalance.getAccountNumber());
         try{
             DepositResponse response = accountService.deposit(accountBalance);
             return new ResponseEntity<>(response,HttpStatus.OK);
@@ -61,5 +66,13 @@ public class AccountController {
         }
 
     }
-
+    public void authorize(String accountNumber) throws ApplicationException{
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        if(!username.equals(accountNumber)){
+            LOGGER.log(Level.SEVERE, "User is not authorized for this account.");
+            throw new ApplicationException("User is not authorized for this account.");
+        }
+    }
 }

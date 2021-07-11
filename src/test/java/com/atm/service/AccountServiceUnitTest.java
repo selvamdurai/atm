@@ -1,12 +1,17 @@
 package com.atm.service;
 
+import com.atm.exception.ServiceException;
+import com.atm.model.AccountBalance;
 import com.atm.model.AtmCashRegister;
 import com.atm.model.BankAccount;
 import com.atm.model.Currency;
 import com.atm.repo.AccountRepository;
 import com.atm.repo.AtmRepository;
+import com.atm.service.commands.AtmCommand;
+import com.atm.service.commands.Command;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +27,9 @@ class AccountServiceUnitTest {
     private AccountRepository accountRepository;
     private AtmRepository atmRepository;
     private AccountService accountService;
+
+    @Mock
+    AtmCashRegister atmCashRegister;
 
     @BeforeEach
 
@@ -52,18 +60,31 @@ class AccountServiceUnitTest {
     }
 
     @Test
+    void checkInvalidAccountNumber() {
+        assertEquals(accountService.getBalance("532343423").getMessage(), "Invalid Account number provided.");
+
+    }
+
+
+    @Test
     void checkWithdrawActionReturnsCorrectAmount(){
         assertEquals(accountService.withDrawAmount("123456789", new BigDecimal(250)).getTotal(), 250);
         assertNotEquals(accountService.withDrawAmount("123456789", new BigDecimal(250)).getTotal(), 200);
     }
 
-
-
     @Test
     void checkOverdraftLimit(){
         accountService.withDrawAmount("123456789", new BigDecimal(800));
         assertEquals(accountService.getBalance("123456789").getBalance(), 0);
-        assertEquals(accountService.withDrawAmount("123456789", new BigDecimal(150)).getTotal(), 150);
+        assertEquals(accountService.withDrawAmount("123456789",
+                new BigDecimal(150)).getTotal(), 150);
+    }
+
+    @Test
+    void checkIfCorrectBalanceIsReturnedAfterDeposit(){
+        assertEquals(accountService.getBalance("123456789").getBalance(), 800);
+        accountService.deposit(new AccountBalance("123456789", 500L));
+        assertEquals(accountService.getBalance("123456789").getBalance(), 1300);
 
     }
 

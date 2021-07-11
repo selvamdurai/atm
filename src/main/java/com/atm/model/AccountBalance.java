@@ -5,12 +5,12 @@ public class AccountBalance {
     private long balance;
     private String message;
 
+    public AccountBalance() {
+    }
+
     public AccountBalance(String accountNumber, long balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
-    }
-
-    public AccountBalance() {
     }
 
     public AccountBalance(String accountNumber, long balance, String message) {

@@ -1,8 +1,7 @@
 package com.atm.service.validation;
 
 import com.atm.model.BankAccount;
-import com.atm.repo.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.math.BigDecimal;
 
@@ -29,11 +28,6 @@ public class AccountValidator implements Validator {
 
     public void setAccount(BankAccount account) {
         this.account = account;
-    }
-
-
-    public void setWithdrawAmount(BigDecimal withdrawAmount) {
-        this.withdrawAmount = withdrawAmount;
     }
 
     @Override
