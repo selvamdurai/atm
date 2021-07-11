@@ -1,6 +1,6 @@
 package com.atm.model;
 
-import com.atm.service.ServiceException;
+import com.atm.exception.ServiceException;
 import org.springframework.stereotype.Component;
 
 

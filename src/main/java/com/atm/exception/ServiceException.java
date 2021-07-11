@@ -1,4 +1,4 @@
-package com.atm.service;
+package com.atm.exception;
 
 public class ServiceException extends Exception{
     public ServiceException(String errMessage) {
@@ -8,4 +8,5 @@ public class ServiceException extends Exception{
     public ServiceException(String errMessage, Throwable err){
         super(errMessage,err);
     }
+
 }

@@ -1,6 +1,6 @@
 package com.atm.service.commands;
 
-import com.atm.service.ServiceException;
+import com.atm.exception.ServiceException;
 
 public interface Command {
     void call() throws ServiceException;

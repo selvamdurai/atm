@@ -3,7 +3,7 @@ package com.atm.service.commands;
 import com.atm.model.AtmCashRegister;
 import com.atm.model.Currency;
 import com.atm.service.ATMService;
-import com.atm.service.ServiceException;
+import com.atm.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;

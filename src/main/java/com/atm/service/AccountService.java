@@ -1,5 +1,6 @@
 package com.atm.service;
 
+import com.atm.exception.ServiceException;
 import com.atm.model.*;
 import com.atm.repo.AccountRepository;
 import com.atm.repo.AtmRepository;
@@ -25,7 +26,6 @@ public class AccountService {
 
     private AccountRepository accountRepository;
     private AtmRepository atmRepository;
-    private String errorMessage;
     private Logger LOGGER = Logger.getLogger(AccountService.class.getName());
 
 
@@ -36,23 +36,25 @@ public class AccountService {
         this.atmRepository = atmRepository;
     }
 
-    public AccountBalance getBalance(String accountNumber){
-        BigDecimal balance = this.accountRepository.getAccounts().get(accountNumber).getBalance().setScale(2);
-        AccountBalance ab = new AccountBalance(accountNumber,balance.longValue());
+    public AccountBalance getBalance(String accountNumber) {
+        AccountBalance ab;
+        if( null != this.accountRepository.getAccounts().get(accountNumber)){
+            BigDecimal balance = this.accountRepository.getAccounts().get(accountNumber).getBalance().setScale(2);
+            ab = new AccountBalance(accountNumber,balance.longValue());
+        }else{
+            ab = new AccountBalance();
+            ab.setMessage("Invalid Account number provided.");
+        }
         return ab;
     }
 
-    public String getErrorMessage(){
-        return this.errorMessage;
-    }
-
     /***
-     * 1. Check if authenticated and has valid token -- must have already passed prior
-     * 2. Validate
+     *
+     * 1. Validate
      *     a. Check if the withdrawAmount is less than ATM cash balance
      *     b. Check if the amount is a multiple of lowest currency available (amount % 5 == 0)
      *     c. Check if the amount is less than available balance for the account including overdraft
-     * 3. Allow withdraw - update account Balance and update ATM cash
+     * 2. Allow withdraw - update account Balance and update ATM cash
      *     a. Calculate and return denomination for the amount - if false - return error message
      *     b. onFailure rollback.
      *
@@ -98,8 +100,8 @@ public class AccountService {
                         try {
                             c.rollback();
                         } catch (ServiceException e) {
-                            e.printStackTrace();
-                            LOGGER.log(Level.SEVERE, "Exception occurred during rollback operation. Master reset advised.", e);
+                            //e.printStackTrace();
+                            LOGGER.log(Level.WARNING, "Exception occurred during rollback operation. Master reset advised.", e);
                         }
                     });
                     message = ex.getMessage();
@@ -109,9 +111,9 @@ public class AccountService {
             }
 
 
-        }catch(Exception exp){
+        }catch(ServiceException exp){
             message = exp.getMessage();
-            LOGGER.log(Level.SEVERE, message, exp);
+            LOGGER.log(Level.WARNING, message, exp);
         }
         WithdrawResponse response = new WithdrawResponse(notes, account);
         response.setMessage(message);
